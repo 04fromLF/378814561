@@ -4,209 +4,191 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <title>Leukeen倒计时 · 04fromLF</title>
+    <title>Leukeen倒计时 · 04fromLF · 天时分秒</title>
     <style>
-        /* 重置 & 基础 */
+        /* ----- 重置 & 基础 (保持原工业基调) ----- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* 背景统一设置在 html 上，确保覆盖整个视口 */
         html {
-            background-color: #f9fafb;  /* 底色 */
-            background-image: 
-                /* 顶部线性渐变，让最上方也有暖色 */
-                linear-gradient(180deg, rgba(255, 240, 220, 0.4) 0%, transparent 30%),
-                /* 两个径向渐变扩大覆盖范围 */
-                radial-gradient(circle at 20% 30%, rgba(255, 220, 180, 0.6) 0%, transparent 75%),
-                radial-gradient(circle at 90% 80%, rgba(210, 180, 240, 0.3) 0%, transparent 75%);
+            background-color: #111213;
             min-height: 100%;
-            /* 固定背景，避免滚动时底部露出白色 */
             background-attachment: fixed;
         }
 
         body {
             min-height: 100vh;
-            font-family: "-apple-system", "BlinkMacSystemFont", "Helvetica Neue", "Source Sans Pro", "Source Sans 3", "DejaVu Sans", "Liberation Sans", "Helvetica", "Roboto", "Inter", "Arial", "SFProDisplay-Regular", "PingFang SC", "Source Han Sans SC", "Noto Sans CJK SC", "Microsoft YaHei", "WenQuanYi Micro Hei", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", emoji, sans-serif;
-            background: transparent;   /* 取消 body 自己的背景，让 html 背景透出 */
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Inter', 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: transparent;
             display: flex;
             flex-direction: column;
-            color: #2e2b2b;
+            color: #e8eaed;
             line-height: 1.5;
+            font-weight: 350;
         }
 
-        /* 用来垂直居中卡片，并自动撑开 */
         .content-wrapper {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
+            padding: 2rem 1.5rem;
             width: 100%;
         }
 
-        /* 主卡片 — 自然手写感，像一张便签 */
+        /* ----- 硬朗直角卡片 ----- */
         .paper-card {
-            max-width: 950px;
+            max-width: 1000px;
             width: 100%;
-            background: #fff;
-            border-radius: 48px 48px 48px 12px;  /* 不规则的圆角，增加手作感 */
-            padding: 3.5rem 2.8rem;
-            box-shadow: 0 18px 30px -12px rgba(90, 60, 30, 0.3),
-                        0 6px 10px -6px rgba(0,0,0,0.1),
-                        inset 0 -1px 4px rgba(255, 255, 220, 0.8);
-            border: 1px solid #e5e7eb;
-            transition: all 0.2s ease;
-            /* 使用 backdrop-filter，并准备降级方案 */
-            backdrop-filter: blur(2px);
+            background: #18181c;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 3px;               
+            padding: 3.2rem 2.8rem;
+            box-shadow: 0 12px 25px -10px rgba(0, 0, 0, 0.8);
+            transition: box-shadow 0.2s ease;
+            color: #eef2f5;
             position: relative;
         }
 
-        /* 降级：不支持 backdrop-filter 时，增加半透明背景 */
-        @supports not (backdrop-filter: blur(2px)) {
-            .paper-card {
-                backdrop-filter: none;
-                background-color: rgba(255, 255, 255, 0.95);
-            }
-        }
-
-        /* 文字容器：居中 */
         .message-box {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            gap: 1rem;
+            gap: 0.8rem;
         }
 
-        /* 第一行：柔和的叮嘱 */
+        /* 第一行：保留原句 */
         .line-first {
-            font-size: 2rem;
-            font-weight: 400;
-            letter-spacing: 0.04em;
-            border-bottom: 1px solid rgb(0 0 0 / 0.1);
-            padding-bottom: 0.3rem;
-            line-height: 1.2;
+            font-size: 1.8rem;
+            font-weight: 370;
+            letter-spacing: 0.01em;
+            border-bottom: 1px solid #313438;
+            padding-bottom: 0.6rem;
+            line-height: 1.3;
             text-align: left;
             overflow-wrap: break-word;
-            word-break: break-all;
+            word-break: break-word;
+            color: #cacecf;
+            width: 100%;
         }
 
-        /* 第二行：倒计时主体 — 有温度的手写数字感 */
+        .line-first b {
+            font-weight: 540;
+            color: #ffffff;
+        }
+
+        /* ----- 第二行：重构的天时分秒区域 (flex 保留) ----- */
         .line-second {
-            font-size: clamp(2.2rem, 9vw, 4.2rem);
-            font-weight: 500;
-            color: #3e362e;
+            font-size: clamp(2.4rem, 10vw, 4.5rem);
+            font-weight: 400;
+            color: #9fa3a8;
             display: flex;
             flex-wrap: wrap;
             align-items: baseline;
             justify-content: center;
-            gap: 0.2rem 0.6rem;
-            margin-top: 0.5rem;
-            padding: 0.8rem 1.8rem;
+            gap: 0.2rem 0.8rem;
+            margin-top: 0.8rem;
+            padding: 0.6rem 1.2rem;
         }
 
-        /* 数字特别强调：手写感受，暖色 */
-        #days-count {
+        /* 数字风格 — 冷光亮青 + 等宽 (取代原 #days-count) */
+        .countdown-number {
             font-size: 1.9em;
             font-weight: 700;
-            color: #b45f3a;  /* 陶土红 */
-            font-family: 'Courier New', 'KaiTi', monospace;
-            text-shadow: 0 2px 8px #f0c8a0;
+            color: #36d6b0;
+            font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Cascadia Code', 'Roboto Mono', 'Courier New', monospace;
+            letter-spacing: 1px;
+            text-shadow: 0 0 6px rgba(54, 214, 176, 0.25);
             padding: 0 0.1rem;
-            letter-spacing: 2px;
-            background: linear-gradient(145deg, #b45f3a, #9b4e2d);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            background: none;
         }
 
-        /* 单位 “天” 更细腻 */
-        .line-second .day-unit {
+        /* 单位延续原 .day-unit 的低调感 */
+        .day-unit {
             font-size: 0.7em;
+            font-weight: 350;
             opacity: 0.7;
-            font-style: italic;
-            color: #7d6b58;
-            margin-left: 0.1rem;
+            color: #9aa2aa;
+            margin-left: 0.15rem;
+            font-style: normal;
         }
 
-        /* 简单的手绘点缀 — 几个小点，更生动 */
-        .message-box::before {
-            content: '•••';
-            font-size: 1.8rem;
-            letter-spacing: 8px;
-            color: #ddb88c;
-            opacity: 0.4;
-            line-height: 0.2;
-            transform: rotate(90deg);
-            margin-bottom: -0.2rem;
-        }
-
-        /* 一个微小的签名装饰（由打字机动态更新） */
+        /* 右下角短语轮播 (保留原符号及库) */
         .paper-card::after {
             content: '✎ ' attr(data-text);
             position: absolute;
             bottom: 20px;
-            right: 30px;
-            font-size: 0.8rem;
-            color: #bba88b;
-            font-style: italic;
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        /* ---------- 画风不同的版权信息 (现代简洁官方) ---------- */
-        .copyright {
-            font-family: 'Arial', 'Helvetica', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            right: 28px;
             font-size: 0.85rem;
-            color: #000;
+            color: gainsboro;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-style: normal;
+            opacity: 0.8;
+            pointer-events: none;
+            background: rgba(255, 255, 255, .08);
+            padding-left: 0.4rem;
+            letter-spacing: 0.2px;
+            border-left: 1px solid #7b848d;
+        }
+
+        /* ----- 版权信息 ----- */
+        .copyright {
+            font-family: system-ui, -apple-system, 'Inter', 'Segoe UI', 'PingFang SC', sans-serif;
+            font-size: 0.85rem;
+            color: #7b848d;
             text-align: center;
-            padding: 1.2rem 1rem;
-            border-top: 1px solid rgba(180, 160, 140, 0.25);
-            background-color: #fff;
-            backdrop-filter: blur(4px);
-            letter-spacing: 0.5px;
-            font-weight: 300;
+            padding: 1.3rem 1rem;
+            border-top: 1px solid #25282c;
+            background-color: #0c0d0e;
+            letter-spacing: 0.3px;
+            font-weight: 320;
             width: 100%;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
         }
 
-        /* 降级：不支持 backdrop-filter 时，降低透明度 */
-        @supports not (backdrop-filter: blur(4px)) {
-            .copyright {
-                backdrop-filter: none;
-                background-color: rgba(255, 255, 255, 0.95);
-            }
-        }
-
-        /* 版权内的分割符自然保留 */
         .copyright span {
             margin: 0 0.3rem;
+            color: #3b4148;
         }
 
-        /* 移动端适应 */
+        /* 移动端优化 */
         @media (max-width: 550px) {
             .paper-card {
-                padding: 2rem 1.5rem;
-                border-radius: 36px 36px 36px 10px;
+                padding: 2.2rem 1.5rem;
             }
             .line-first {
-                font-size: 24px;
+                font-size: 22px;
             }
             .line-second {
-                font-size: clamp(2rem, 8vw, 3.2rem);
-                padding: 0.5rem 1rem;
+                font-size: clamp(2.2rem, 8vw, 3.4rem);
+                padding: 0.4rem 0.8rem;
+                gap: 0.2rem 0.4rem;
             }
-            .message-box::before {
-                font-size: 1.4rem;
+            .countdown-number {
+                font-size: 0.8em;   /* 保持比例 */
+            }
+            .paper-card::after {
+                bottom: 14px;
+                right: 18px;
+                font-size: 0.7rem;
             }
             .copyright {
                 font-size: 0.7rem;
-                padding: 1rem 0.5rem;
+                padding: 1rem 0.8rem;
             }
+        }
+
+        /* 确保noscript可见 */
+        noscript div {
+            text-align: center;
+            padding: 1rem;
+            color: #9aa5b3;
+            background: #1c1e20;
+            border: 1px solid #2f3135;
         }
     </style>
 </head>
@@ -215,10 +197,13 @@
         <div class="paper-card">
             <div class="message-box">
                 <div class="line-first">🌿 嘿，我是<b>04fromLF</b>；不要想我，一个月后回来。</div>
+                <!-- 重构后的倒计时行：前缀 + 天/小时/分钟/秒 数字及单位 -->
                 <div class="line-second">
-                    <span>距离三月十七还有</span>
-                    <span id="days-count">--</span>
-                    <span class="day-unit">天</span>
+                    <span id="countdown-prefix">距离三月十七还有</span>
+                    <span class="countdown-number" id="countdown-days">--</span><span class="day-unit">天</span>
+                    <span class="countdown-number" id="countdown-hours">00</span><span class="day-unit">小时</span>
+                    <span class="countdown-number" id="countdown-minutes">00</span><span class="day-unit">分钟</span>
+                    <span class="countdown-number" id="countdown-seconds">00</span><span class="day-unit">秒</span>
                 </div>
             </div>
         </div>
@@ -230,39 +215,58 @@
 
     <script>
         (function() {
-            const daysSpan = document.getElementById('days-count');
+            // ---------- 实时倒计时（天时分秒，跳秒） ----------
+            // 固定目标：2026年3月17日 00:00:00 (本地时间)
+            const targetDate = new Date(2026, 2, 17, 0, 0, 0); // 注意月份2表示三月
 
-            function getDaysUntilNextMarch17() {
-                const today = new Date();
-                const year = today.getFullYear();
-                const month = today.getMonth();
-                const day = today.getDate();
+            // 获取显示元素
+            const prefixSpan = document.getElementById('countdown-prefix');
+            const daysSpan = document.getElementById('countdown-days');
+            const hoursSpan = document.getElementById('countdown-hours');
+            const minutesSpan = document.getElementById('countdown-minutes');
+            const secondsSpan = document.getElementById('countdown-seconds');
 
-                const currentUTC = Date.UTC(year, month, day);
-                let targetYear = year;
-                let targetUTC = Date.UTC(targetYear, 2, 17);
+            // 辅助：补零
+            function padTwo(num) {
+                return num.toString().padStart(2, '0');
+            }
 
-                if (currentUTC > targetUTC) {
-                    targetYear = year + 1;
-                    targetUTC = Date.UTC(targetYear, 2, 17);
+            function updatePreciseCountdown() {
+                const now = new Date();
+                const diffMs = targetDate - now;          // 可正可负
+                const absMs = Math.abs(diffMs);
+                const totalSeconds = Math.floor(absMs / 1000);
+
+                // 计算天、小时、分钟、秒
+                const days = Math.floor(totalSeconds / 86400);
+                const hours = Math.floor((totalSeconds % 86400) / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+
+                // 更新数字（天数不补零，其他补零）
+                daysSpan.textContent = days;
+                hoursSpan.textContent = padTwo(hours);
+                minutesSpan.textContent = padTwo(minutes);
+                secondsSpan.textContent = padTwo(seconds);
+
+                // 根据时间先后切换前缀文案
+                if (diffMs >= 0) {
+                    prefixSpan.textContent = '距离三月十七还有';
+                } else {
+                    prefixSpan.textContent = '已经过去';
                 }
-
-                const diffDays = (targetUTC - currentUTC) / (1000 * 60 * 60 * 24);
-                return Math.floor(diffDays);
             }
 
-            function updateCountdown() {
-                daysSpan.textContent = getDaysUntilNextMarch17();
-            }
-
-            updateCountdown();
-            setInterval(updateCountdown, 30 * 60 * 1000);
+            // 立即执行一次，然后每秒更新
+            updatePreciseCountdown();
+            setInterval(updatePreciseCountdown, 1000);
         })();
+
+        // ---------- 右下角打字机短语轮播 (完全保留原版，未作改动) ----------
         (function() {
             const card = document.querySelector('.paper-card');
             if (!card) return;
 
-            // 短语库
             const phrases = [
                 '记得回来', '我爱你们', '我会想你的', '喜欢您来', '下次再见',
                 '一路顺风', '保重身体', '常联系哦', '期待重逢', '想念你们',
@@ -276,7 +280,6 @@
                 '闪闪发光', '自由如风', '我们来日方长', '你很重要', '记得想我'
             ]; 
 
-            // 初始随机选一个
             let currentPhrase = phrases[Math.floor(Math.random() * phrases.length)];
             card.dataset.text = currentPhrase;
 
@@ -292,7 +295,6 @@
                         setTimeout(step, delay);
                     } else {
                         mode = 'typing';
-                        // 随机抽取下一个短语
                         let newPhrase;
                         do {
                             newPhrase = phrases[Math.floor(Math.random() * phrases.length)];
@@ -316,7 +318,7 @@
     </script>
 
     <noscript>
-        <div style="text-align:center; padding:1rem; color:#7f7a72;">请启用JavaScript查看倒计时天数 :)</div>
+        <div>请启用JavaScript查看倒计时天数 :)</div>
     </noscript>
 </body>
 </html>
