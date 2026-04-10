@@ -159,7 +159,7 @@
             transition: background-color 0.2s ease, border-top-color 0.2s ease, color 0.2s ease;
         }
 
-        .copyright span {
+        #copyright-hr {
             margin: 0 0.3rem;
             color: #3b4148;
             transition: color 0.2s ease;
@@ -344,7 +344,7 @@
     </div>
 
     <footer class="copyright">
-        Copyright © 2026 Leukeen Inc. 保留所有权利。 <span>|</span> 怀ICP备13608号
+        Copyright © <span id="current-year">至今</span> Leukeen Inc. 保留所有权利。 <span  id="copyright-hr">|</span> 怀ICP备13608号
     </footer>
 
     <!-- 主题切换按钮：默认包含太阳SVG（深色模式显示太阳，表示可切换到亮色） -->
@@ -474,6 +474,13 @@
                 }
             });
         })();
+        // 版权年份
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearSpan = document.getElementById('current-year');
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+        });
     </script>
 
     <noscript>
