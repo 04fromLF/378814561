@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <title>Leukeen倒计时 · 沐子笙丶 · 天时分秒 · 主题切换</title>
+    <style>
+        /* ----- 重置 & 基础 (保持原工业基调) ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            background-color: #111213;
+            min-height: 100%;
+            background-attachment: fixed;
+            transition: background-color 0.2s ease;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Inter', 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            color: #e8eaed;
+            line-height: 1.5;
+            font-weight: 350;
+            transition: color 0.2s ease;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            width: 100%;
+        }
+
+        /* ----- 硬朗直角卡片 ----- */
+        .paper-card {
+            max-width: 1000px;
+            width: 100%;
+            background: #18181c;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 3px;               
+            padding: 3.2rem 2.8rem;
+            box-shadow: 0 12px 25px -10px rgba(0, 0, 0, 0.8);
+            transition: box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+            color: #eef2f5;
+            position: relative;
+        }
+
+        .message-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 0.8rem;
+        }
+
+        /* 第一行：保留原句 */
+        .line-first {
+            font-size: 1.8rem;
+            font-weight: 370;
+            letter-spacing: 0.01em;
+            border-bottom: 1px solid #313438;
+            padding-bottom: 0.6rem;
+            line-height: 1.3;
+            text-align: left;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            color: #cacecf;
+            width: 100%;
+            transition: color 0.2s ease, border-bottom-color 0.2s ease;
+        }
+
+        .line-first b {
+            font-weight: 540;
+            color: #ffffff;
+            transition: color 0.2s ease;
+        }
+
+        .line-first-2 {
+            font-size: 1rem;
+            text-align: center;
+            border-bottom: none;
+        }
+
+        /* ----- 第二行：重构的天时分秒区域 ----- */
+        .line-second {
+            font-size: clamp(2.4rem, 10vw, 4.5rem);
+            font-weight: 400;
+            color: #9fa3a8;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: center;
+            gap: 0.2rem 0.8rem;
+            margin-top: 0.8rem;
+            padding: 0.6rem 1.2rem;
+            transition: color 0.2s ease;
+        }
+
+        /* 数字风格 — 冷光亮青 */
+        .countdown-number {
+            font-size: 1.9em;
+            font-weight: 700;
+            color: #36d6b0;
+            font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Cascadia Code', 'Roboto Mono', 'Courier New', monospace;
+            letter-spacing: 1px;
+            text-shadow: 0 0 6px rgba(54, 214, 176, 0.25);
+            padding: 0 0.1rem;
+            background: none;
+            transition: color 0.2s ease, text-shadow 0.2s ease;
+        }
+
+        /* 单位延续原 .day-unit 的低调感 */
+        .day-unit {
+            font-size: 0.7em;
+            font-weight: 350;
+            opacity: 0.7;
+            color: #9aa2aa;
+            margin-left: 0.15rem;
+            font-style: normal;
+            transition: color 0.2s ease, opacity 0.2s ease;
+        }
+
+        /* 右下角短语轮播 (保留原符号) */
+        .paper-card::after {
+            content: '✎ ' attr(data-text);
+            position: absolute;
+            bottom: 20px;
+            right: 28px;
+            font-size: 0.85rem;
+            color: gainsboro;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-style: normal;
+            opacity: 0.8;
+            pointer-events: none;
+            background: rgba(255, 255, 255, .08);
+            padding-left: 0.4rem;
+            letter-spacing: 0.2px;
+            border-left: 1px solid #7b848d;
+            transition: color 0.2s ease, background 0.2s ease, border-left-color 0.2s ease;
+        }
+
+        /* ----- 版权信息 ----- */
+        .copyright {
+            font-family: system-ui, -apple-system, 'Inter', 'Segoe UI', 'PingFang SC', sans-serif;
+            font-size: 0.85rem;
+            color: #7b848d;
+            text-align: center;
+            padding: 1.3rem 1rem;
+            border-top: 1px solid #25282c;
+            background-color: #0c0d0e;
+            letter-spacing: 0.3px;
+            font-weight: 320;
+            width: 100%;
+            transition: background-color 0.2s ease, border-top-color 0.2s ease, color 0.2s ease;
+        }
+
+        .copyright span {
+            margin: 0 0.3rem;
+            color: #3b4148;
+            transition: color 0.2s ease;
+        }
+
+        /* ----- 主题切换按钮 (固定右下角, SVG图标) ----- */
+        .theme-toggle-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: rgba(30, 32, 36, 0.85);
+            border: 1px solid #4a4e54;
+            color: #f0f3f5;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+            backdrop-filter: blur(4px);
+            padding: 0;
+            line-height: 1;
+        }
+
+        .theme-toggle-btn:hover {
+            transform: scale(1.05);
+            background: #3a3e44;
+            border-color: #7b848d;
+        }
+
+        .theme-toggle-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* 按钮内部 SVG 样式：尺寸自适应，填充使用 currentColor 以跟随文字颜色 */
+        .theme-toggle-btn svg {
+            width: 60%;
+            height: 60%;
+            fill: currentColor;
+            display: block;
+            transition: fill 0.2s ease;
+        }
+
+        /* 移动端调整 */
+        @media (max-width: 550px) {
+            .paper-card {
+                padding: 2.2rem 1.5rem;
+            }
+            .line-first {
+                font-size: 22px;
+            }
+            .line-first-2 {
+                font-size: 0.5rem;
+            }
+            .line-second {
+                font-size: clamp(2.2rem, 8vw, 3.4rem);
+                padding: 0.4rem 0.8rem;
+                gap: 0.2rem 0.4rem;
+            }
+            .countdown-number {
+                font-size: 0.8em;
+            }
+            .paper-card::after {
+                bottom: 14px;
+                right: 18px;
+                font-size: 0.7rem;
+            }
+            .copyright {
+                font-size: 0.7rem;
+                padding: 1rem 0.8rem;
+            }
+            .theme-toggle-btn {
+                width: 48px;
+                height: 48px;
+                bottom: 90px;
+                right: 20px;
+            }
+            .theme-toggle-btn svg {
+                width: 65%;
+                height: 65%;
+            }
+        }
+
+        /* ----- 亮色主题 (light mode) ----- */
+        html.light {
+            background-color: #f0f2f5;
+        }
+
+        html.light body {
+            color: #1e2024;
+        }
+
+        html.light .paper-card {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.12);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            color: #1e2024;
+        }
+
+        html.light .line-first {
+            color: #2c2e33;
+            border-bottom-color: #b0b6bd;
+        }
+
+        html.light .line-first b {
+            color: #000000;
+        }
+
+        html.light .line-second {
+            color: #3a3f46;
+        }
+
+        html.light .countdown-number {
+            color: #1a4b40;        /* 深墨绿 */
+            text-shadow: none;
+        }
+
+        html.light .day-unit {
+            color: #4d555e;
+            opacity: 0.8;
+        }
+
+        html.light .paper-card::after {
+            color: #2d3745;
+            background: rgba(0, 0, 0, 0.04);
+            border-left-color: #9aa2aa;
+        }
+
+        html.light .copyright {
+            background-color: #e6e8ed;
+            border-top-color: #c0c6cf;
+            color: #3b4148;
+        }
+
+        html.light .copyright span {
+            color: #7b848d;
+        }
+
+        /* 按钮在亮色模式下的适配：背景变浅，文字颜色变深，SVG 使用 currentColor 自动适配 */
+        html.light .theme-toggle-btn {
+            background: rgba(230, 230, 235, 0.85);
+            color: #1e2024;
+            border-color: #9aa2aa;
+        }
+
+        html.light .theme-toggle-btn:hover {
+            background: #c0c6cf;
+        }
+
+        /* 确保noscript也适应 */
+        html.light noscript div {
+            background: #d8dce2;
+            color: #1e2024;
+            border-color: #b0b6bd;
+        }
+
+        noscript div {
+            text-align: center;
+            padding: 1rem;
+            color: #9aa5b3;
+            background: #1c1e20;
+            border: 1px solid #2f3135;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="paper-card">
+            <div class="message-box">
+                <div class="line-first">🐾 嘿，我是<b>沐子笙丶</b>；不要想我，在备战高考，两个月后回来。</div>
+                <!-- 倒计时行：前缀 + 天/小时/分钟/秒 数字及单位 -->
+                <div class="line-second">
+                    <span id="countdown-prefix">距离三月十七还有</span>
+                    <span class="countdown-number" id="countdown-days">--</span><span class="day-unit">天</span>
+                    <span class="countdown-number" id="countdown-hours">00</span><span class="day-unit">小时</span>
+                    <span class="countdown-number" id="countdown-minutes">00</span><span class="day-unit">分钟</span>
+                    <span class="countdown-number" id="countdown-seconds">00</span><span class="day-unit">秒</span>
+                </div>
+                <div class="line-first line-first-2">大雨落幽燕，白浪滔天，秦皇岛外打鱼船。一片汪洋都不见，知向谁边？</br>往事越千年，魏武挥鞭，东临碣石有遗篇。萧瑟秋风今又是，换了人间</div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="copyright">
+        Copyright © 2026 Leukeen Inc. 保留所有权利。 <span>|</span> 怀ICP备13608号
+    </footer>
+
+    <!-- 主题切换按钮：默认包含太阳SVG（深色模式显示太阳，表示可切换到亮色） -->
+    <button class="theme-toggle-btn" id="themeToggle" aria-label="切换黑白主题">
+        <!-- 通过JS动态填充SVG，这里只作占位，避免加载时无内容 -->
+    </button>
+
+    <script>
+        (function() {
+            // ---------- 实时倒计时（天时分秒，跳秒） ----------
+            const targetDate = new Date(2026, 5, 9, 0, 0, 0); // 2026年3月17日
+
+            const prefixSpan = document.getElementById('countdown-prefix');
+            const daysSpan = document.getElementById('countdown-days');
+            const hoursSpan = document.getElementById('countdown-hours');
+            const minutesSpan = document.getElementById('countdown-minutes');
+            const secondsSpan = document.getElementById('countdown-seconds');
+
+            function padTwo(num) {
+                return num.toString().padStart(2, '0');
+            }
+
+            function updatePreciseCountdown() {
+                const now = new Date();
+                const diffMs = targetDate - now;
+                const absMs = Math.abs(diffMs);
+                const totalSeconds = Math.floor(absMs / 1000);
+
+                const days = Math.floor(totalSeconds / 86400);
+                const hours = Math.floor((totalSeconds % 86400) / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+
+                daysSpan.textContent = days;
+                hoursSpan.textContent = padTwo(hours);
+                minutesSpan.textContent = padTwo(minutes);
+                secondsSpan.textContent = padTwo(seconds);
+
+                prefixSpan.textContent = diffMs >= 0 ? '距离六月九号还有' : '已经过去';
+            }
+
+            updatePreciseCountdown();
+            setInterval(updatePreciseCountdown, 1000);
+        })();
+
+        // ---------- 右下角打字机短语轮播 (完全保留原版) ----------
+        (function() {
+            const card = document.querySelector('.paper-card');
+            if (!card) return;
+
+            const phrases = [
+                '记得回来', '我爱你们', '我会想你的', '喜欢您来', '下次再见',
+                '一路顺风', '保重身体', '常联系哦', '期待重逢', '想念你们',
+                '后会有期', '照顾好自己', '别忘了我', '感恩相遇', '愿你快乐',
+                '有空常来', '祝好', '平安喜乐', '珍重', '再会',
+                '岁月静好', '未来可期', '人间值得', '万事胜意', '心想事成',
+                '爱你哦', '比心', '想你啦', '山高水长', '江湖再见',
+                '星辰大海', '诗和远方', '加油呀', '继续前行', '勇敢向前',
+                '天天开心', '幸福安康', '一切顺利', '越来越好', '前程似锦',
+                '顶峰相见', '永远年轻', '热泪盈眶', '温柔以待', '被爱包围',
+                '闪闪发光', '自由如风', '我们来日方长', '你很重要', '记得想我'
+            ]; 
+
+            let currentPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+            card.dataset.text = currentPhrase;
+
+            let mode = 'deleting';
+            let delay = 200;
+
+            function step() {
+                let currentText = card.dataset.text || '';
+
+                if (mode === 'deleting') {
+                    if (currentText.length > 0) {
+                        card.dataset.text = currentText.slice(0, -1);
+                        setTimeout(step, delay);
+                    } else {
+                        mode = 'typing';
+                        let newPhrase;
+                        do {
+                            newPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+                        } while (newPhrase === currentPhrase && phrases.length > 1);
+                        currentPhrase = newPhrase;
+                        setTimeout(step, delay * 2);
+                    }
+                } else if (mode === 'typing') {
+                    if (currentText.length < currentPhrase.length) {
+                        card.dataset.text = currentPhrase.slice(0, currentText.length + 1);
+                        setTimeout(step, delay);
+                    } else {
+                        mode = 'deleting';
+                        setTimeout(step, delay * 3);
+                    }
+                }
+            }
+
+            setTimeout(step, 1000);
+        })();
+
+        // ---------- 主题切换：使用太阳/月亮 SVG (纯色矢量图标) ----------
+        (function() {
+            // 定义两个SVG字符串 (FontAwesome 风格, 已去除注释)
+            const sunSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M320 32C328.4 32 336.3 36.4 340.6 43.7L396.1 136.3L500.9 110C509.1 108 517.8 110.4 523.7 116.3C529.6 122.2 532 131 530 139.1L503.7 243.8L596.4 299.3C603.6 303.6 608.1 311.5 608.1 319.9C608.1 328.3 603.7 336.2 596.4 340.5L503.7 396.1L530 500.8C532 509 529.6 517.7 523.7 523.6C517.8 529.5 509 532 500.9 530L396.2 503.7L340.7 596.4C336.4 603.6 328.5 608.1 320.1 608.1C311.7 608.1 303.8 603.7 299.5 596.4L243.9 503.7L139.2 530C131 532 122.4 529.6 116.4 523.7C110.4 517.8 108 509 110 500.8L136.2 396.1L43.6 340.6C36.4 336.2 32 328.4 32 320C32 311.6 36.4 303.7 43.7 299.4L136.3 243.9L110 139.1C108 130.9 110.3 122.3 116.3 116.3C122.3 110.3 131 108 139.2 110L243.9 136.2L299.4 43.6L301.2 41C305.7 35.3 312.6 31.9 320 31.9zM320 176C240.5 176 176 240.5 176 320C176 399.5 240.5 464 320 464C399.5 464 464 399.5 464 320C464 240.5 399.5 176 320 176zM320 416C267 416 224 373 224 320C224 267 267 224 320 224C373 224 416 267 416 320C416 373 373 416 320 416z"/></svg>`;
+
+            const moonSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576C388.8 576 451.3 548.8 497.3 504.6C504.6 497.6 506.7 486.7 502.6 477.5C498.5 468.3 488.9 462.6 478.8 463.4C473.9 463.8 469 464 464 464C362.4 464 280 381.6 280 280C280 207.9 321.5 145.4 382.1 115.2C391.2 110.7 396.4 100.9 395.2 90.8C394 80.7 386.6 72.5 376.7 70.3C358.4 66.2 339.4 64 320 64z"/></svg>`;
+
+            const toggleBtn = document.getElementById('themeToggle');
+            const htmlElement = document.documentElement;
+
+            if (!toggleBtn) return;
+
+            // 初始化：确保深色模式（无light类），按钮显示太阳
+            if (htmlElement.classList.contains('light')) {
+                htmlElement.classList.remove('light');
+            }
+            toggleBtn.innerHTML = sunSvg;   // 深色模式 → 太阳图标
+
+            toggleBtn.addEventListener('click', function() {
+                if (htmlElement.classList.contains('light')) {
+                    // 当前亮色 → 切回深色，显示太阳
+                    htmlElement.classList.remove('light');
+                    toggleBtn.innerHTML = sunSvg;
+                } else {
+                    // 当前深色 → 切到亮色，显示月亮
+                    htmlElement.classList.add('light');
+                    toggleBtn.innerHTML = moonSvg;
+                }
+            });
+        })();
+    </script>
+
+    <noscript>
+        <div>请启用JavaScript查看倒计时天数 :)</div>
+    </noscript>
+</body>
+</html>
